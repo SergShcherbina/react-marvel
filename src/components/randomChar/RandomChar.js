@@ -41,22 +41,25 @@ class RandomChar extends Component {
         })
     }
 
+    onCharLoading = () => {                                         //подставляем спинер пока загружается новая картинка 
+        this.setState({
+            loading : true,
+        })
+    }
+
     updateChar = () => {
         const id = Math.floor(Math.random() * (1011334 - 1011136) + 1011136);
         this.marvelService
             .getCharacter(id)
             .then(res => {this.onCharLoted(res)})
             .catch(this.onError)
+            this.onCharLoading()
     };
 
-    nextChar = () => {
-        this.updateChar()
-    }
-
     render() {
-        const {char, loading, error} = this.state;  //двойная деструктуризация
+        const {char, loading, error} = this.state;                  //двойная деструктуризация
 
-        //если значение null, то ничего не отрендерится
+        //если значение null, то переменная не отрендерится
         const errorMessage = error ? <ErrorMessage/> : null;             
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? <View char={char} /> : null;
@@ -75,7 +78,7 @@ class RandomChar extends Component {
                         Or choose another one
                     </p>
                     <button className="button button__main"
-                            onClick={this.nextChar}>
+                            onClick={this.updateChar}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
