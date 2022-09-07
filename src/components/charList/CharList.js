@@ -43,7 +43,8 @@ class CharList extends Component {
             const styleImg = thumbnail.includes('image_not_available') ? {objectFit: 'fill'} : null;
 
             return (
-                <li className="char__item" key={id} >
+                <li className="char__item" key={id} 
+                    onClick={() => this.props.getId(id)}>
                     <img src={thumbnail} alt={name} style={styleImg}/>
                     <div className="char__name">{name}</div>
                 </li> 
@@ -65,8 +66,6 @@ class CharList extends Component {
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? charLi : null;
 
-
-
         return (
             <div className="char__list">
                 {content}
@@ -78,7 +77,6 @@ class CharList extends Component {
             </div>
         )
     }
-
 }
 
 export default CharList;

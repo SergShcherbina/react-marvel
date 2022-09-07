@@ -16,7 +16,6 @@ class RandomChar extends Component {
 
     componentDidMount() {
         this.updateChar()
-        console.log('componentDidMount');
     }
 
     componentDidUpdatr() {
@@ -57,7 +56,7 @@ class RandomChar extends Component {
     };
 
     render() {
-        const {char, loading, error} = this.state;                  //двойная деструктуризация
+        const {char, loading, error} = this.state;                  
 
         //если значение null, то переменная не отрендерится
         const errorMessage = error ? <ErrorMessage/> : null;             

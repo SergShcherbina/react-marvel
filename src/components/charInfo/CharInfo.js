@@ -1,61 +1,127 @@
 import './charInfo.scss';
-import thor from '../../resources/img/thor.jpeg';
+import { Component } from 'react/cjs/react.production.min';
+import MarvelService from '../../services/MarvelServices';
+import ErrorMessage from '../errorMessage/ErrorMessage';
+import Spinner from '../spinner/Spinner';
+import Skeleton from '../skeleton/Skeleton'
 
-const CharInfo = () => {
-    return (
-        <div className="char__info">
-            <div className="char__basics">
-                <img src={thor} alt="abyss"/>
+
+
+class CharInfo extends Component {
+    state = {
+        char: null,
+        error: false,
+        loading: false
+    }
+
+    marvelService = new MarvelService();
+
+    onCharLoded = (char) => {
+        this.setState({
+            char,
+            loading: false
+        })
+    }
+
+    onError = () => {
+        this.setState({
+            loading : false,
+            error: true,
+        })
+    }
+
+    onCharLoading = () => {                                         //подставляем спинер пока загружается новая картинка 
+        this.setState({
+            loading : true,
+        })
+    }
+
+    updateChar = () => {
+        const {charId} = this.props
+        if(!charId){                                               //если приходит null, то запрос не делаем
+            return;
+        }
+
+        this.onCharLoading();
+
+        this.marvelService
+            .getCharacter(charId)
+            .then(res => {this.onCharLoded(res)})
+            .catch(this.onError)
+    };
+
+    componentDidUpdate(prevProps) {
+        if( this.props.charId !== prevProps.charId) {                  //если новый зкщзы и старый не совпадают, выполняем
+            this.updateChar();
+        }
+        console.log('componentDidUpdate');
+    }
+
+    componentDidMount() {
+        this.updateChar();
+        console.log('componentDidMount');
+    }
+
+    render() {
+        const {char, loading, error} = this.state
+        console.log(char);
+
+        const skeleton = char || loading || error ? null : <Skeleton/>
+        const errorMessage = error ? <ErrorMessage/> : null;             
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error || !char) ? <View char={char} /> : null;
+
+        return (
+            <div className="char__info">
+                {errorMessage}
+                {spinner}
+                {content}
+                {skeleton}
+            </div>
+        )
+    }
+    
+}
+
+const View = ({char}) => {
+    const {name, description, thumbnail, homepage, wiki, comics} = char;
+    const styleImgChar = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : null; 
+
+    return <>
+        <div className="char__basics">
+                <img src={thumbnail} alt={name} style={styleImgChar} />
                 <div>
-                    <div className="char__info-name">thor</div>
+                    <div className="char__info-name">{name}</div>
                     <div className="char__btns">
-                        <a href="#" className="button button__main">
+                        <a href={homepage} className="button button__main">
                             <div className="inner">homepage</div>
                         </a>
-                        <a href="#" className="button button__secondary">
+                        <a href={wiki} className="button button__secondary">
                             <div className="inner">Wiki</div>
                         </a>
                     </div>
                 </div>
-            </div>
-            <div className="char__descr">
-                In Norse mythology, Loki is a god or jötunn (or both). Loki is the son of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and the world serpent Jörmungandr. By Sigyn, Loki is the father of Nari and/or Narfi and with the stallion Svaðilfari as the father, Loki gave birth—in the form of a mare—to the eight-legged horse Sleipnir. In addition, Loki is referred to as the father of Váli in the Prose Edda.
-            </div>
-            <div className="char__comics">Comics:</div>
-            <ul className="char__comics-list">
-                <li className="char__comics-item">
-                    All-Winners Squad: Band of Heroes (2011) #3
-                </li>
-                <li className="char__comics-item">
-                    Alpha Flight (1983) #50
-                </li>
-                <li className="char__comics-item">
-                    Amazing Spider-Man (1999) #503
-                </li>
-                <li className="char__comics-item">
-                    Amazing Spider-Man (1999) #504
-                </li>
-                <li className="char__comics-item">
-                    AMAZING SPIDER-MAN VOL. 7: BOOK OF EZEKIEL TPB (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Amazing-Spider-Man: Worldwide Vol. 8 (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Asgardians Of The Galaxy Vol. 2: War Of The Realms (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Vengeance (2011) #4
-                </li>
-                <li className="char__comics-item">
-                    Avengers (1963) #1
-                </li>
-                <li className="char__comics-item">
-                    Avengers (1996) #1
-                </li>
-            </ul>
         </div>
-    )
+        <div className="char__descr">
+            {description}
+        </div>
+        <div className="char__comics">Comics:</div>
+        <ul className="char__comics-list"> 
+
+            {comics.lenght>0 ? null : 'There is no comics with this character'}  
+
+            {comics.map((item, i) => {
+
+                    if(i > 9) return;
+                    
+                    return (
+                        <li className="char__comics-item" key={i}>
+                            {item.name}
+                        </li>
+                        )  
+                }) }         
+        </ul>
+    </>
 }
 
 export default CharInfo;

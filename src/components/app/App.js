@@ -4,21 +4,32 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 
 import decoration from '../../resources/img/vision.png';
+import { Component } from "react/cjs/react.production.min";
 
-const App = () => {
-    return (
-        <div className="app">
-            <AppHeader/>
-            <main>
-                <RandomChar/>
-                <div className="char__content">
-                    <CharList/>
-                    <CharInfo/>
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision"/>
-            </main>
-        </div>
-    )
+class App extends Component {
+    state = {
+        selectedChar: null,
+    };
+
+    getId = (id) => {
+        this.setState({selectedChar: id})
+    };
+
+    render() {
+        return (
+            <div className="app">
+                <AppHeader/>
+                <main>
+                    <RandomChar/>
+                    <div className="char__content">
+                        <CharList getId={this.getId}/>
+                        <CharInfo charId={this.state.selectedChar}/>
+                    </div>
+                    <img className="bg-decoration" src={decoration} alt="vision"/>
+                </main>
+            </div>
+        )
+    }
 }
 
 export default App;
