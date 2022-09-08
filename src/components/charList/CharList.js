@@ -6,23 +6,44 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 
 class CharList extends Component {
     state = {
-            characters: [],
+            charList: [],
             loading: true,
             error: false,
+            offset: 210,
+            newItemLoading: false,    
+            charEnded: false
         }
         
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.updateCharacters();
+        this.updateCharList();
     }
 
-    onCharListLoaded = (arr) => {
-        this.setState(({
-            characters: arr,
-            loading: false,
-        }))
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.updateCharList(offset);
     }
+
+    onCharListLoading = () => {
+        this.setState({newItemLoading: true})
+    }
+
+    onCharListLoaded = (newCharList) => {
+        let ended = false;
+        if(newCharList.length < 9){                              //Если длинна нового массива меньше 9
+            ended = true;
+        }
+
+        this.setState(({offset, charList}) => ({
+            charList: [...charList, ...newCharList],
+            loading: false,
+            newItemLoading: false,
+            offset: offset + 9,
+            charEnded: ended,
+            })
+        )
+    };
 
     onError = () => {
         this.setState({
@@ -31,19 +52,19 @@ class CharList extends Component {
         })
     }
 
-    updateCharacters = () => {
-        this.marvelService.getAllCharacters()
+    updateCharList = (offset) => {
+        this.marvelService.getAllCharacters(offset)
             .then(res => this.onCharListLoaded(res))
             .catch(this.onError);
     }
 
-    renderIrems = (characters) => {                              //формирование верстки из данных сервера
+    renderItems = (characters) => {                              //формирование верстки из данных сервера
         const charLi = characters.map(items => {            
             const {name, thumbnail, id} = items;
             const styleImg = thumbnail.includes('image_not_available') ? {objectFit: 'fill'} : null;
 
             return (
-                <li className="char__item" key={id} 
+                <li className="char__item" key={id}
                     onClick={() => this.props.getId(id)}>
                     <img src={thumbnail} alt={name} style={styleImg}/>
                     <div className="char__name">{name}</div>
@@ -59,8 +80,8 @@ class CharList extends Component {
     }
     
     render() {
-        const {characters, loading, error} = this.state;
-        const charLi = this.renderIrems(characters);
+        const {charList: characters, loading, error, offset, newItemLoading, charEnded} = this.state;
+        const charLi = this.renderItems(characters);
 
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
@@ -71,8 +92,13 @@ class CharList extends Component {
                 {content}
                 {errorMessage}
                 {spinner}
-                <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                <button className="button button__main button__long"
+                        disabled={newItemLoading}
+                        onClick={() => this.onRequest(offset)}
+                        style={{'display': charEnded ? 'none' : 'block'}}>                            
+                    <div className="inner">
+                        {newItemLoading ? 'Loading...' : 'load more'} 
+                    </div>
                 </button>
             </div>
         )

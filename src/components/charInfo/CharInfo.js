@@ -54,19 +54,14 @@ class CharInfo extends Component {
         if( this.props.charId !== prevProps.charId) {                  //если новый зкщзы и старый не совпадают, выполняем
             this.updateChar();
         }
-        console.log('componentDidUpdate');
     }
 
     componentDidMount() {
         this.updateChar();
-        console.log('componentDidMount');
     }
-
-    
 
     render() {
         const {char, loading, error} = this.state
-        console.log(char);
 
         const skeleton = char || loading || error ? null : <Skeleton/>
         const errorMessage = error ? <ErrorMessage/> : null;             
@@ -114,14 +109,14 @@ const View = ({char}) => {
 
             {comics.map((item, i) => {
 
-                    if(i > 9) return;
-                    
-                    return (
-                        <li className="char__comics-item" key={i}>
-                            {item.name}
-                        </li>
-                        )  
-                }) }         
+                if(i > 9) return;
+                
+                return (
+                    <li className="char__comics-item" key={i}>
+                        {item.name}
+                    </li>
+                    )  
+            }) }         
         </ul>
     </>
 }
