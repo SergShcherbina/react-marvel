@@ -62,6 +62,8 @@ class CharInfo extends Component {
         console.log('componentDidMount');
     }
 
+    
+
     render() {
         const {char, loading, error} = this.state
         console.log(char);
@@ -108,7 +110,7 @@ const View = ({char}) => {
         <div className="char__comics">Comics:</div>
         <ul className="char__comics-list"> 
 
-            {comics.lenght>0 ? null : 'There is no comics with this character'}  
+            {comics.length > 0 ? null : 'There is no comics with this character'}  
 
             {comics.map((item, i) => {
 
