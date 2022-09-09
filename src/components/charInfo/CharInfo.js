@@ -1,9 +1,11 @@
-import './charInfo.scss';
 import { Component } from 'react/cjs/react.production.min';
 import MarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton'
+import propTypes from 'prop-types';
+
+import './charInfo.scss';
 
 
 
@@ -30,7 +32,7 @@ class CharInfo extends Component {
         })
     }
 
-    onCharLoading = () => {                                         //подставляем спинер пока загружается новая картинка 
+    onCharLoading = () => {                                        //подставляем спинер пока загружается новая картинка 
         this.setState({
             loading : true,
         })
@@ -51,7 +53,7 @@ class CharInfo extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if( this.props.charId !== prevProps.charId) {                  //если новый зкщзы и старый не совпадают, выполняем
+        if( this.props.charId !== prevProps.charId) {              //если новый зкщзы и старый не совпадают, выполняем
             this.updateChar();
         }
     }
@@ -119,6 +121,10 @@ const View = ({char}) => {
             }) }         
         </ul>
     </>
+}
+
+CharInfo.propTypes = {                                           //валидация пропсов элемента с помощью PropTypes
+    charId: propTypes.number,                                    //указываем какой пропс: какой тип данный должен прийти
 }
 
 export default CharInfo;

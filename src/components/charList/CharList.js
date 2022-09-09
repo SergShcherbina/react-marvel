@@ -3,6 +3,8 @@ import { Component } from 'react/cjs/react.production.min';
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import propTypes from "prop-types";
+
 
 class CharList extends Component {
     state = {
@@ -65,7 +67,7 @@ class CharList extends Component {
 
             return (
                 <li className="char__item" key={id}
-                    onClick={() => this.props.getId(id)}>
+                    onClick={() => this.props.getCharId(id)}>
                     <img src={thumbnail} alt={name} style={styleImg}/>
                     <div className="char__name">{name}</div>
                 </li> 
@@ -103,6 +105,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {                                           //проверка пропса с помощью PropTypes
+    getCharId: propTypes.func.isRequired                         //прверяем что пропс передан и содержит функцию 
 }
 
 export default CharList;
