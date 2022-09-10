@@ -1,5 +1,5 @@
 import './charList.scss';
-import { Component } from 'react/cjs/react.production.min';
+import { Component, createRef } from 'react/cjs/react.production.min';
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -7,6 +7,8 @@ import propTypes from "prop-types";
 
 
 class CharList extends Component {
+    myRef = createRef;                                           //React.createRef
+
     state = {
             charList: [],
             loading: true,
@@ -19,7 +21,7 @@ class CharList extends Component {
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.updateCharList();
+        this.updateCharList();        
     }
 
     onRequest = (offset) => {
@@ -54,20 +56,35 @@ class CharList extends Component {
         })
     }
 
+
     updateCharList = (offset) => {
         this.marvelService.getAllCharacters(offset)
             .then(res => this.onCharListLoaded(res))
             .catch(this.onError);
     }
 
+    itemRefs = [];
+    setRef = (ref) => {
+        this.itemRefs.push(ref);
+    }
+
+    focusOnItem = (id) => {
+        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        this.itemRefs[id].classList.add('char__item_selected');
+        this.itemRefs[id].focus();
+    }
+
     renderItems = (characters) => {                              //формирование верстки из данных сервера
-        const charLi = characters.map(items => {            
+        const charLi = characters.map((items, i)=> {            
             const {name, thumbnail, id} = items;
             const styleImg = thumbnail.includes('image_not_available') ? {objectFit: 'fill'} : null;
 
             return (
-                <li className="char__item" key={id}
-                    onClick={() => this.props.getCharId(id)}>
+                <li className="char__item" 
+                    key={id}
+                    ref={this.setRef}
+                    onClick={() => (this.props.getCharId(id), this.focusOnItem(i))}
+                    tabIndex={0}>
                     <img src={thumbnail} alt={name} style={styleImg}/>
                     <div className="char__name">{name}</div>
                 </li> 
@@ -112,3 +129,4 @@ CharList.propTypes = {                                           //провер�
 }
 
 export default CharList;
+
