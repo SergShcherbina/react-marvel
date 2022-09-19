@@ -1,4 +1,4 @@
-import { Component } from 'react/cjs/react.production.min';
+import { useEffect, useState } from 'react';
 import MarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
@@ -7,79 +7,60 @@ import propTypes from 'prop-types';
 
 import './charInfo.scss';
 
+const CharInfo = (props) => {
+
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
 
-class CharInfo extends Component {
-    state = {
-        char: null,
-        error: false,
-        loading: false
-    }
+    const marvelService = new MarvelService();
 
-    marvelService = new MarvelService();
-
-    onCharLoded = (char) => {
-        this.setState({
-            char,
-            loading: false
-        })
-    }
-
-    onError = () => {
-        this.setState({
-            loading : false,
-            error: true,
-        })
-    }
-
-    onCharLoading = () => {                                        //подставляем спинер пока загружается новая картинка 
-        this.setState({
-            loading : true,
-        })
-    }
-
-    updateChar = () => {
-        const {charId} = this.props
-        if(!charId){                                               //если приходит null, то запрос не делаем
-            return;
-        }
-
-        this.onCharLoading();
-
-        this.marvelService
-            .getCharacter(charId)
-            .then(res => {this.onCharLoded(res)})
-            .catch(this.onError)
+    const onCharLoded = (char) => {
+        setChar(char);
+        setLoading(false);
     };
 
-    componentDidUpdate(prevProps) {
-        if( this.props.charId !== prevProps.charId) {              //если новый зкщзы и старый не совпадают, выполняем
-            this.updateChar();
-        }
-    }
+    const onError = () => {
+        setLoading(false);
+        setError(true);
+    };
 
-    componentDidMount() {
-        this.updateChar();
-    }
+    const onCharLoading = () => {                                  //подставляем спинер пока загружается новая картинка 
+        setLoading(false);
+    };
 
-    render() {
-        const {char, loading, error} = this.state
+    const {charId} = props;
 
-        const skeleton = char || loading || error ? null : <Skeleton/>
-        const errorMessage = error ? <ErrorMessage/> : null;             
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error || !char) ? <View char={char} /> : null;
+    const updateChar = () => {
+        if(!charId) return;                                        //если приходит null, то запрос не делаем
 
-        return (
-            <div className="char__info">
-                {errorMessage}
-                {spinner}
-                {content}
-                {skeleton}
-            </div>
-        )
-    }
-    
+        onCharLoading();
+
+        marvelService
+            .getCharacter(charId)
+            .then(res => {onCharLoded(res)})
+            .catch(onError)
+    };
+
+    useEffect(() => {
+        updateChar();        
+    }, [charId]);
+
+
+    const skeleton = char || loading || error ? null : <Skeleton/>
+    const errorMessage = error ? <ErrorMessage/> : null;             
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !char) ? <View char={char} /> : null;
+
+    return (
+        <div className="char__info">
+            {errorMessage}
+            {spinner}
+            {content}
+            {skeleton}
+        </div>
+    )    
 }
 
 const View = ({char}) => {

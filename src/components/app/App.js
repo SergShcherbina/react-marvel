@@ -4,39 +4,38 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 import decoration from '../../resources/img/vision.png';
-import { Component } from "react/cjs/react.production.min";
+import { useState } from "react";
 
-class App extends Component {
-    state = {
-        selectedChar: null,
+
+const App = () => {    
+
+    const [selectedChar, setChar] = useState(null);
+    
+    const getCharId = (id) => {
+        setChar(id)
     };
 
-    getCharId = (id) => {
-        this.setState({selectedChar: id})
-    };
-
-    render() {
-        return (
-            <div className="app">
-                <AppHeader/>
-                <main>
+    return (
+        <div className="app">
+            <AppHeader/>
+            <main>
+                <ErrorBoundary>
+                    <RandomChar/>
+                </ErrorBoundary>
+                <div className="char__content">                    
                     <ErrorBoundary>
-                        <RandomChar/>
+                        <CharList getCharId={getCharId}/>
                     </ErrorBoundary>
-                    <div className="char__content">                    
-                        <ErrorBoundary>
-                            <CharList getCharId={this.getCharId}/>
-                        </ErrorBoundary>
 
-                        <ErrorBoundary>                                   
-                            <CharInfo charId={this.state.selectedChar}/>
-                        </ErrorBoundary>
-                    </div>
-                    <img className="bg-decoration" src={decoration} alt="vision"/>
-                </main>
-            </div>
-        )
-    }
+                    <ErrorBoundary>                                   
+                        <CharInfo charId={selectedChar}/>
+                    </ErrorBoundary>
+                </div>
+                <img className="bg-decoration" src={decoration} alt="vision"/>
+            </main>
+        </div>
+    )
 }
+
 
 export default App;
