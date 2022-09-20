@@ -17,7 +17,6 @@ const CharList = (props) => {
     useEffect(()=> {
         updateCharList()
     }, []);
-
     
     const onRequest = (offset) => {
         setNewItemLoading(true)
@@ -26,7 +25,7 @@ const CharList = (props) => {
 
     const onCharListLoaded = (newCharList) => {
         let ended = false;
-        if(newCharList.length < 9){                              //Если длинна нового массива меньше 9
+        if(newCharList.length < 9){                                     //Если длинна нового массива меньше 9
             ended = true;
         }   
 
@@ -48,7 +47,7 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     }
 
-    const renderItems = (characters) => {                              //формирование верстки из данных сервера
+    const renderItems = (characters) => {                               //формирование верстки из данных сервера
         const charLi = characters.map((items, i)=> {            
             const {name, thumbnail, id} = items;
             const styleImg = thumbnail.includes('image_not_available') ? {objectFit: 'fill'} : null;
@@ -56,7 +55,7 @@ const CharList = (props) => {
             return (
                 <li className="char__item" 
                     key={id}
-                    ref={(el)=> itemRefs.current[i] = el}
+                    ref={(el)=> itemRefs.current[i] = el}              
                     onClick={() => (props.getCharId(id), focusOnItem(i))}
                     tabIndex={0}>
                     <img src={thumbnail} alt={name} style={styleImg}/>
@@ -65,7 +64,7 @@ const CharList = (props) => {
             );
         });
 
-        return (                                                 //конструкция вынесена для центровки спиннера/ошибки
+        return (                                                        //конструкция вынесена для центровки спиннера/ошибки
             <ul className="char__grid">
                 {charLi}
             </ul>
@@ -94,8 +93,8 @@ const CharList = (props) => {
     )
 }
 
-CharList.propTypes = {                                           //проверка пропса с помощью PropTypes
-    getCharId: propTypes.func.isRequired                         //прверяем что пропс передан и содержит функцию 
+CharList.propTypes = {                                                  //проверка пропса с помощью PropTypes
+    getCharId: propTypes.func.isRequired                                //прверяем что пропс передан и содержит функцию 
 }
 
 export default CharList;
