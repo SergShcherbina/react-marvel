@@ -1,17 +1,14 @@
 import './randomChar.scss';
 import { useState, useEffect } from 'react';
-import MarvelService from '../../services/MarvelServices';
 import mjolnir from '../../resources/img/mjolnir.png';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import useMarvelService from '../../services/MarvelServices';
 
 const RandomChar = () => {
 
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    const marvelService = new MarvelService();                        //создаем экземпляр класса для дальнейшей работы с ним
+    const {loading, error, getCharacter, clearError} = useMarvelService(); 
 
     useEffect(()=> {
         updateChar();
@@ -20,37 +17,24 @@ const RandomChar = () => {
         return(()=> {                                                 //удаляем ссылку на таймер (обязательно!)
             clearInterval(timerId);
         });
-
     }, [])
 
-    const onCharLoted = (char) => {
+    const onCharLoded = (char) => {
         setChar(char);
-        setLoading(false);
     };
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    };
-
-    const onCharLoading = () => {                                         //подставляем спинер пока загружается новая картинка 
-        setLoading(true);
-    }
 
     function updateChar () {
         const id = Math.floor(Math.random() * (1011334 - 1011136) + 1011136);
-        onCharLoading();
+        clearError();                                                //если была ошибка при предыдущ загрузке, сбрасываем ее
 
-        marvelService
-            .getCharacter(id)
-            .then(res => {onCharLoted(res)})
-            .catch(onError);
+        getCharacter(id)
+            .then(onCharLoded)
     };
 
     //если значение null, то переменная не отрендерится
     const errorMessage = error ? <ErrorMessage/> : null;             
     const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? <View char={char} /> : null;
+    const content = !(loading || error || !char) ? <View char={char} /> : null;
     
     return (
         <div className="randomchar">
