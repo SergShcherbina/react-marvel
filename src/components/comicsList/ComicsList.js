@@ -11,7 +11,6 @@ const ComicsList = () => {
     const [comicsEnded, setComicsEnded] = useState(false);                //для контроля display кнопки загрузки новых комиксов
     const {loading, error, getAllComics} = useMarvelService();    
 
-    console.log(comicsEnded);
     const onRequest = (offset) => {
         setNewItemLoading(true);
         updateComicsList(offset);
@@ -60,6 +59,8 @@ const ComicsList = () => {
             </ul>
         )
     };   
+
+    console.log('render');
 
     const renderComicsList = renderComics(comics);
     const errorMessage = error ? <ErrorMessage/> : null;
