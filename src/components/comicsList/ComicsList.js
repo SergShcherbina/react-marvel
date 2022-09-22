@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import useMarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
+import { Link } from 'react-router-dom';
 
 const ComicsList = () => {
     const [comics, setComics] = useState([]);                             //нач зн обязательно массив
@@ -38,17 +39,17 @@ const ComicsList = () => {
     const renderComics = (comicses) => {
 
         const comicsList = comicses.map((item, i)=> {                    //получаем массив comics и перебираем 
-            const {title, images, prices} = item;                        //деструктурируем данные из каждого item
+            const {title, images, prices, id} = item;                        //деструктурируем данные из каждого item
 
             return (
                 <li className="comics__item"
                     key={i}                                              //в key порядковый номер, так как id повторяются
                     >
-                    <a href="#">
+                    <Link to={`/comics/${id}`}>
                         <img src={images} alt="ultimate war" className="comics__item-img"/>
                         <div className="comics__item-name">{title}</div>
                         <div className="comics__item-price">{prices ? prices + ' $' : null}</div>
-                    </a>
+                    </Link>
                 </li>
             );
         });
@@ -59,8 +60,6 @@ const ComicsList = () => {
             </ul>
         )
     };   
-
-    console.log('render');
 
     const renderComicsList = renderComics(comics);
     const errorMessage = error ? <ErrorMessage/> : null;

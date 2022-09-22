@@ -19,8 +19,8 @@ const CharInfo = (props) => {
 
     const updateChar = () => {
         if(!charId) return;                                        //если приходит null, то запрос не делаем
-
         clearError();
+
         getCharacter(charId)
             .then(res => {onCharLoded(res)})
     };
