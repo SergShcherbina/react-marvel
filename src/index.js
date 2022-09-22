@@ -8,8 +8,8 @@ import "./style/style.scss";
 ReactDOM
 	.createRoot(document.getElementById('root'))
 	.render(
-		//<React.StrictMode>                           //в React 18+ не переходит по ссылкам router Link to, в строгом режиме
-        	<App />
-		//</React.StrictMode>,
+		<React.StrictMode>                          
+			<App />
+		</React.StrictMode>,
 
 	);
