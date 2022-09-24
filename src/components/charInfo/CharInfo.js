@@ -4,8 +4,9 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton'
 import propTypes from 'prop-types';
-
 import './charInfo.scss';
+// import CharInfoComics from '../charInfoComics/CharInfoComics';
+import { Link } from 'react-router-dom';
 
 const CharInfo = (props) => {
 
@@ -68,18 +69,24 @@ const View = ({char}) => {
             {description}
         </div>
         <div className="char__comics">Comics:</div>
+
+            {/* <CharInfoComics/> */}
+
         <ul className="char__comics-list"> 
 
             {comics.length > 0 ? null : 'There is no comics with this character'}  
 
             {comics.map((item, i) => {
-
-                if(i > 9) return;
+                if(i > 9) return;                                         
+                const idComicInfo = item.resourceURI.match(/\d{3,}/)[0]    //получаем id комикса из url адреса с сервера     
                 
                 return (
-                    <li className="char__comics-item" key={i}>
-                        {item.name}
-                    </li>
+                    <Link to={`/comics/${idComicInfo}`} 
+                    className="char__comics-item" key={i} >
+                        <li>
+                            {item.name}
+                        </li>
+                    </Link>
                     )  
             }) }         
         </ul>
