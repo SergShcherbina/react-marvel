@@ -6,7 +6,7 @@ import Spinner from '../spinner/Spinner';
 import { useParams, Link } from 'react-router-dom';
 
 const SingleComicPage = () => {
-    const {comicId} = useParams();
+    const {comicId} = useParams();                                  //получаем id из адресной строки 
     const [comic, setComic] = useState({});  
     const {loading, error, getComic, clearError} = useMarvelService();
 
@@ -49,14 +49,11 @@ const View = ({comic}) => {
                 <p className="single-comic__descr">{description}</p>
                 <p className="single-comic__descr">{pageCount}</p>
                 <p className="single-comic__descr">language: {language}</p>
-                <div className="single-comic__price">Price: {prices}$</div>
+                <div className="single-comic__price">Price: {prices} $</div>
             </div>
             <Link to="/comics" className="single-comic__back">Back to all</Link>
         </div>
     )
 };
-
-
-
 
 export default SingleComicPage;

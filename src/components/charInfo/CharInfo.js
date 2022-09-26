@@ -5,11 +5,9 @@ import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton'
 import propTypes from 'prop-types';
 import './charInfo.scss';
-// import CharInfoComics from '../charInfoComics/CharInfoComics';
 import { Link } from 'react-router-dom';
 
 const CharInfo = (props) => {
-
     const {charId} = props;
     const [char, setChar] = useState(null);
     const {loading, error, getCharacter, clearError} = useMarvelService();
@@ -27,9 +25,8 @@ const CharInfo = (props) => {
     };
 
     useEffect(() => {
-        updateChar(); 
+        updateChar();
     }, [charId]);
-
 
     const skeleton = char || loading || error ? null : <Skeleton/>;
     const errorMessage = error ? <ErrorMessage/> : null;             
@@ -37,18 +34,44 @@ const CharInfo = (props) => {
     const content = !(loading || error || !char) ? <View char={char} /> : null;
 
     return (
-        <div className="char__info">
-            {errorMessage}
-            {spinner}
-            {content}
-            {skeleton}
-        </div>
+        <>
+            <div className="char__info">
+                {errorMessage}
+                {spinner}
+                {content}
+                {skeleton}
+            </div>            
+        </>
     )    
 }
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki, comics} = char;
     const styleImgChar = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : null; 
+
+    const renderList = () => {
+        return (
+            <ul className="char__comics-list"> 
+
+                {comics.length > 0 ? null : 'There is no comics with this character'} 
+
+                {comics.map((item, i) => {
+                    if(i > 9) return;
+                    
+                    const idComicInfo = item.resourceURI.match(/\d{3,}/)[0]    //получаем id комикса из url адреса с сервера     
+                    
+                    return (
+                        <Link to={`/comics/${idComicInfo}`} 
+                        className="char__comics-item" key={i} >
+                            <li>
+                                {item.name}
+                            </li>
+                        </Link>
+                    )  
+                })}       
+            </ul>
+        )
+    }    
 
     return <>
         <div className="char__basics">
@@ -68,28 +91,8 @@ const View = ({char}) => {
         <div className="char__descr">
             {description}
         </div>
-        <div className="char__comics">Comics:</div>
-
-            {/* <CharInfoComics/> */}
-
-        <ul className="char__comics-list"> 
-
-            {comics.length > 0 ? null : 'There is no comics with this character'}  
-
-            {comics.map((item, i) => {
-                if(i > 9) return;                                         
-                const idComicInfo = item.resourceURI.match(/\d{3,}/)[0]    //получаем id комикса из url адреса с сервера     
-                
-                return (
-                    <Link to={`/comics/${idComicInfo}`} 
-                    className="char__comics-item" key={i} >
-                        <li>
-                            {item.name}
-                        </li>
-                    </Link>
-                    )  
-            }) }         
-        </ul>
+        <div className="char__comics">Comics:</div>    
+        {renderList()}            
     </>
 }
 

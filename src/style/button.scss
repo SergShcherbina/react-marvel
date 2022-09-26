@@ -49,6 +49,16 @@
         &:hover {
             color: #fff;
         }
+        &-list {
+            display: block;
+            margin: 23px auto 0;
+            background-color: inherit;
+            border: none;
+            position: absolute;
+            left: 195px;
+            bottom: 3px;
+            cursor: pointer;
+        }
     }
     &__secondary {
         .inner {
