@@ -4,6 +4,7 @@ import useMarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const ComicsList = () => {
     const [comics, setComics] = useState([]);                             //нач зн обязательно массив
@@ -42,21 +43,29 @@ const ComicsList = () => {
             const {title, images, prices, id} = item;                    //деструктурируем данные из каждого item
 
             return (
-                <li className="comics__item"
-                    key={i}                                              //в key порядковый номер, так как id повторяются
+                <CSSTransition
+                    classNames={'comics__item'}
+                    timeout={500}
+                    key={i}
                     >
-                    <Link to={`/comics/${id}`}>                          
-                        <img src={images} alt="ultimate war" className="comics__item-img"/>
-                        <div className="comics__item-name">{title}</div>
-                        <div className="comics__item-price">{prices ? prices + ' $' : null}</div>
-                    </Link>
-                </li>
+                    <li className="comics__item"
+                        key={i}                                          //в key порядковый номер, так как id повторяются
+                        >
+                        <Link to={`/comics/${id}`}>                          
+                            <img src={images} alt="ultimate war" className="comics__item-img"/>
+                            <div className="comics__item-name">{title}</div>
+                            <div className="comics__item-price">{prices ? prices + ' $' : null}</div>
+                        </Link>
+                    </li>
+                </CSSTransition>
             );
         });
 
         return (
             <ul className="comics__grid">
-                {comicsList}
+                <TransitionGroup component={null}>
+                    {comicsList}
+                </TransitionGroup>
             </ul>
         )
     };   

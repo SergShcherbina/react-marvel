@@ -61,3 +61,28 @@
         right: -37px;
     }
 }
+
+.randomchar__block-enter {
+    opacity: 0;
+}
+.randomchar__block-enter-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 500ms;
+}
+.randomchar__block-enter-done {
+    opacity: 1;
+    visibility: visible;
+}
+.randomchar__block-node-exit {
+    opacity: 1;
+}
+.randomchar__block-exit-active {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 500ms;
+}
+.randomchar__block-exit-done {
+    opacity: 0;
+    visibility: hidden;
+}

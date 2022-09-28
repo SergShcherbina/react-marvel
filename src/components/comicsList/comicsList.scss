@@ -34,3 +34,25 @@
         }
     }
 }
+
+.comics__item-enter {
+    transform: scale(0);
+}
+.comics__item-enter-active {
+    transform: scale(1);
+    transition: all 500ms;
+
+}
+.comics__item-enter-done {
+    transform: scale(1);
+}
+.comics__item-node-exit {
+    opacity: 1;
+}
+.comics__item-exit-active {
+    transform: scale(0);
+    transition: all 500ms;
+}
+.comics__item-exit-done {
+    transform: scale(0);
+}
