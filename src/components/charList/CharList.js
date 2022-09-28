@@ -4,6 +4,7 @@ import useMarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import propTypes from "prop-types";
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
 const CharList = (props) => {
@@ -53,20 +54,24 @@ const CharList = (props) => {
             const styleImg = thumbnail.includes('image_not_available') ? {objectFit: 'fill'} : null;
 
             return (
-                <li className="char__item" 
-                    key={id}
-                    ref={(el)=> itemRefs.current[i] = el}              
-                    onClick={() => (props.getCharId(id), focusOnItem(i))}
-                    tabIndex={0}>
-                    <img src={thumbnail} alt={name} style={styleImg}/>
-                    <div className="char__name">{name}</div>
-                </li> 
+                <CSSTransition key={id} timeout={500} classNames="char__item">
+                    <li className="char__item" 
+                        key={id}
+                        ref={(el)=> itemRefs.current[i] = el}              
+                        onClick={() => (props.getCharId(id), focusOnItem(i))}
+                        tabIndex={0}>
+                        <img src={thumbnail} alt={name} style={styleImg}/>
+                        <div className="char__name">{name}</div>
+                    </li> 
+                </CSSTransition>
             );
         });
 
         return (                                                        //конструкция вынесена для центровки спиннера/ошибки
             <ul className="char__grid">
-                {charLi}
+                <TransitionGroup component={null}>
+                    {charLi}
+                </TransitionGroup>
             </ul>
         )
     }    

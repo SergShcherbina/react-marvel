@@ -1,10 +1,9 @@
 import AppHeader from "../appHeader/AppHeader";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import {MainPage, ComicsPage, SingleComicPage} from '../pages'
 import Spinner from "../spinner/Spinner";
 import { lazy, Suspense } from "react";
 
-const Page404 = lazy(() => import('../pages/404'))                     //динамический импорт обяз после статических
+const Page404 = lazy(() => import('../pages/404'))                     //! динамический импорт обяз после статических
 const MainPage = lazy(() => import('../pages/MainPage'))
 const ComicsPage = lazy(() => import('../pages/ComicsPage'))
 const SingleComicPage = lazy(() => import('../pages/SingleComicPage'))
