@@ -1,12 +1,13 @@
+import './charInfo.scss';
+
 import { useEffect, useState } from 'react';
 import useMarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton'
 import propTypes from 'prop-types';
-import './charInfo.scss';
 import { Link } from 'react-router-dom';
-import FormSearch from '../form/FormSearch';
+
 
 const CharInfo = (props) => {
     const {charId} = props;
@@ -41,7 +42,6 @@ const CharInfo = (props) => {
                 {spinner}
                 {content}
                 {skeleton}
-                <FormSearch/>  
             </div> 
         </>
     )    

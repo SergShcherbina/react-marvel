@@ -5,8 +5,10 @@ import { lazy, Suspense } from "react";
 
 const Page404 = lazy(() => import('../pages/404'))                     //! динамический импорт обяз после статических
 const MainPage = lazy(() => import('../pages/MainPage'))
-const ComicsPage = lazy(() => import('../pages/ComicsPage'))
-const SingleComicPage = lazy(() => import('../pages/SingleComicPage'))
+const ComicsPage = lazy(() => import('../pages/ComicPage'))
+const SinglePage = lazy(() => import('../pages/SinglePage'))
+const SingleComicLayout = lazy(()=> import('../pages/singleComicLayout/SingleComicLayout'))
+const SingleCharacterLayout = lazy(()=> import('../pages/singleCharacterLayout/SingleCharacterLayout'))
 
 const App = () => {
     return (
@@ -18,7 +20,8 @@ const App = () => {
                         <Routes>
                             <Route path ="/" element={<MainPage/>} />         
                             <Route path="/comics" element={<ComicsPage/>}/> 
-                            <Route path="/comics/:comicId" element={<SingleComicPage/>}/>   
+                            <Route path="/comics/:id" element={<SinglePage Component={SingleComicLayout} dataType='comic'/>} /> 
+                            <Route path="/character/:id" element={<SinglePage Component={SingleCharacterLayout} dataType='character'/>}/>
                             <Route path="*" element={<Page404/>}/>   
                         </Routes>   
                     </Suspense>

@@ -4,7 +4,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelServices';
-import {CSSTransition, SwitchTransition} from 'react-transition-group'
+import {CSSTransition} from 'react-transition-group'
 
 
 const RandomChar = () => {
