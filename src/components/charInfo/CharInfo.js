@@ -6,6 +6,7 @@ import Skeleton from '../skeleton/Skeleton'
 import propTypes from 'prop-types';
 import './charInfo.scss';
 import { Link } from 'react-router-dom';
+import FormSearch from '../form/FormSearch';
 
 const CharInfo = (props) => {
     const {charId} = props;
@@ -40,7 +41,8 @@ const CharInfo = (props) => {
                 {spinner}
                 {content}
                 {skeleton}
-            </div>            
+                <FormSearch/>  
+            </div> 
         </>
     )    
 }

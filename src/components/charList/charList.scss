@@ -5,7 +5,7 @@
         margin-top: 50px;
         display: grid;
         grid-template-columns: 650px 425px;
-        column-gap: 25px;
+        gap: 25px;
         align-items: start;
     }
     &__grid {
