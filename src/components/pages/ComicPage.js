@@ -1,13 +1,23 @@
+import Helmet from 'react-helmet';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary"
 import ComicsList from "../comicsList/ComicsList";
 import AppBanner from "../appBanner/AppBanner";
 
 const ComicsPage = () => {
     return (
-        <ErrorBoundary>
-            <AppBanner />
-            <ComicsList />
-        </ErrorBoundary>
+        <>
+            <Helmet>
+                <meta
+                    name="description"
+                    content="Page with list of our comics"
+                />
+                <title>Comics page</title>
+            </Helmet>
+            <ErrorBoundary>
+                <AppBanner />
+                <ComicsList />
+            </ErrorBoundary>
+        </>
     )
 }
 

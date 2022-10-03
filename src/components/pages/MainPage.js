@@ -5,6 +5,8 @@ import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import { useState } from "react";
 import FormSearch from "../form/FormSearch";
+import Helmet from 'react-helmet';
+
 
 const MainPage = () => {
     const [selectedChar, setChar] = useState(null);
@@ -14,7 +16,14 @@ const MainPage = () => {
     };
 
     return (
-        <>
+        <>  
+            <Helmet>
+                <meta
+                    name="description"
+                    content="Marvel information porta"
+                />
+                <title>Marvel information porta</title>
+            </Helmet>
             <ErrorBoundary>
                 <RandomChar />
             </ErrorBoundary>
