@@ -1,17 +1,16 @@
 import './randomChar.scss';
 import { useState, useEffect } from 'react';
 import mjolnir from '../../resources/img/mjolnir.png';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelServices';
 import {CSSTransition} from 'react-transition-group'
+import setContent from '../../utils/setContent';
 
 
 const RandomChar = () => {
 
     const [char, setChar] = useState(null);
     const [blockShow, setBlockShow] = useState(false);
-    const {loading, error, getCharacter, clearError} = useMarvelService(); 
+    const {process, setProcess, getCharacter, clearError} = useMarvelService(); 
 
     useEffect(()=> {
         updateChar();
@@ -28,24 +27,18 @@ const RandomChar = () => {
     };
 
     function updateChar () {
-        const id = Math.floor(Math.random() * (1011334 - 1011136) + 1011136);
+        const id = Math.floor(Math.random() * (1011300 - 1011150) + 1011136);
         clearError();                                                //если была ошибка при предыдущ загрузке, сбрасываем ее
 
         getCharacter(id)
             .then(onCharLoded)
+            .then(() => setProcess('confirmed'))
     };
 
-    //если значение null, то переменная не отрендерится
-    const errorMessage = error ? <ErrorMessage/> : null;             
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char}/> : null;
-    
     return (
         <CSSTransition classNames={'randomchar'} timeout={500} in={blockShow} unmountOnExit >
             <div className="randomchar">
-                {errorMessage}
-                {spinner}
-                {content}
+                {setContent(process, View, char)}
                 <div className="randomchar__static">
                     <p className="randomchar__title">
                         Random character for today!<br/>
@@ -65,14 +58,14 @@ const RandomChar = () => {
     )
 }
 
-const View = ({char}) => {
+const View = ({data}) => {
     const [blocShow, setBlocShow] = useState(false);
 
     useEffect(()=> {
         setBlocShow(true)
-    }, [char])
+    }, [data])
 
-    const {name, description, thumbnail, homepage, wiki} = char;
+    const {name, description, thumbnail, homepage, wiki} = data;
     const descrFix = !description ? 'Описание отсутствует' : description.slice(0,230) + '...';
 
     //если в названии картинки есть строка "image_not_available" то меняем свойство objectFit

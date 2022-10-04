@@ -5,7 +5,7 @@ const useMarvelService = () => {
     const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
     const _apiKey = 'apikey=e085346ae8f6005895c9c698543ab5ab';
     const _baseOffset = 210 
-    const {loading, error, request, clearError} = useHttp();             //получаем из хука обьект с методами     
+    const {request, clearError, process, setProcess} = useHttp();             //получаем из хука обьект с методами     
     
     const getAllCharacters = async (offset = _baseOffset) => {           //если аргумент не передается, то используем _baseOffset
         const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
@@ -55,7 +55,14 @@ const useMarvelService = () => {
         }
     };
 
-    return {loading, error, getAllCharacters, getCharacter, clearError, getAllComics, getComic, searchCharacter};
+    return {getAllCharacters, 
+            getCharacter, 
+            clearError, 
+            getAllComics, 
+            getComic, 
+            searchCharacter, 
+            process, 
+            setProcess};
 };
 
 export default useMarvelService;

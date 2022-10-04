@@ -1,17 +1,31 @@
 import './comicsList.scss';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import useMarvelService from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
-import { Link } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
+const setContent = (process, Component, newItemLoading) => {           //не импортируем а делаем кастомный из-за newItemLoading
+    switch (process) {
+        case 'waiting': return  <Spinner/>;
+            // break;
+        case 'loading': return newItemLoading ? <Component/> : <Spinner/>;
+            // break;
+        case 'confirmed': return <Component/>;
+            // break;
+        case 'error': return <ErrorMessage/>;
+            // break;
+        default :  throw new Error('Unexpected process state');
+    }
+}
 
 const ComicsList = () => {
     const [comics, setComics] = useState([]);                             //нач зн обязательно массив
     const [offset, setOffset] = useState(0);                              //для отсчета количества комиксов передается в getAllComics
     const [newItemLoading, setNewItemLoading] = useState(false);          //для контроля disabled кнопки загрузки новых комиксов
     const [comicsEnded, setComicsEnded] = useState(false);                //для контроля display кнопки загрузки новых комиксов
-    const {loading, error, getAllComics} = useMarvelService();    
+    const {process, setProcess, getAllComics} = useMarvelService();    
 
     const onRequest = (offset) => {
         setNewItemLoading(true);
@@ -31,6 +45,7 @@ const ComicsList = () => {
     const updateComicsList = (offset) => {
         getAllComics(offset)
             .then(res => onSetComics(res))
+            .then(()=>setProcess('confirmed'))
     };
 
     useEffect(() => {
@@ -70,15 +85,9 @@ const ComicsList = () => {
         )
     };   
 
-    const renderComicsList = renderComics(comics);
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && comics.length === 0 ? <Spinner/> : null;
-
     return (
         <div className="comics__list">
-            {errorMessage}
-            {spinner}
-            {renderComicsList}
+            {setContent(process, ()=> renderComics(comics), newItemLoading)}
             <button 
                 onClick={() => onRequest(offset)}
                 disabled={newItemLoading}                                //отключаем копку во время подгрузки новых комиксов  

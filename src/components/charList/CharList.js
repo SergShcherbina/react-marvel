@@ -1,11 +1,24 @@
 import './charList.scss';
 import { useEffect, useState, useRef} from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import useMarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import propTypes from "prop-types";
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
+const setContent = (process, Component, newItemLoading) => {           //не импортируем а делаем кастомный из-за newItemLoading
+    switch (process) {
+        case 'waiting': return  <Spinner/>;
+            // break;
+        case 'loading': return newItemLoading ? <Component/> : <Spinner/>;
+            // break;
+        case 'confirmed': return <Component/>;
+            // break;
+        case 'error': return <ErrorMessage/>;
+            // break;
+        default :  throw new Error('Unexpected process state');
+    }
+}
 
 const CharList = (props) => {
 
@@ -13,7 +26,7 @@ const CharList = (props) => {
     const [offset, setOffset] = useState(210);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [charEnded, setCharEnded] = useState(false);
-    const {loading, error, getAllCharacters} = useMarvelService();
+    const {process, setProcess, getAllCharacters} = useMarvelService();
     
     useEffect(()=> {
         updateCharList()
@@ -39,6 +52,7 @@ const CharList = (props) => {
     const updateCharList = (offset) => {
         getAllCharacters(offset)
             .then(res => onCharListLoaded(res))
+            .then(() => setProcess('confirmed'))
     }
 
     const itemRefs = useRef([]);
@@ -63,7 +77,7 @@ const CharList = (props) => {
                         <img src={thumbnail} alt={name} style={styleImg}/>
                         <div className="char__name">{name}</div>
                     </li> 
-                </CSSTransition>
+                </CSSTransition> 
             );
         });
 
@@ -75,17 +89,13 @@ const CharList = (props) => {
             </ul>
         )
     }    
-    
-    const charLi = renderItems(charList);
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;        
 
     return (
         <div className="char__list">
-            {charLi}
-            {errorMessage}
-            {spinner}
+
+            {/* вместо второго аргумента Component можем передать ф-ю, тогда будет работать  */}
+            {setContent(process, ()=>renderItems(charList), newItemLoading)}
+
             <button className="button button__main button__long"
                     disabled={newItemLoading}
                     onClick={() => onRequest(offset)}

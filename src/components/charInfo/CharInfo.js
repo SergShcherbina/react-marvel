@@ -1,18 +1,15 @@
 import './charInfo.scss';
-
 import { useEffect, useState } from 'react';
 import useMarvelService from '../../services/MarvelServices';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Spinner from '../spinner/Spinner';
-import Skeleton from '../skeleton/Skeleton'
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import setContent from '../../utils/setContent';
 
 
 const CharInfo = (props) => {
     const {charId} = props;
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacter, clearError} = useMarvelService();
+    const {getCharacter, clearError, process, setProcess} = useMarvelService();
 
     const onCharLoded = (char) => {
         setChar(char);
@@ -24,31 +21,24 @@ const CharInfo = (props) => {
 
         getCharacter(charId)
             .then(res => {onCharLoded(res)})
+            .then(() => setProcess('confirmed'))                   //устанавливаем состояние после того как приходит результат
     };
 
     useEffect(() => {
         updateChar();
     }, [charId]);
 
-    const skeleton = char || loading || error ? null : <Skeleton/>;
-    const errorMessage = error ? <ErrorMessage/> : null;             
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char} /> : null;
-
     return (
         <>
             <div className="char__info">
-                {errorMessage}
-                {spinner}
-                {content}
-                {skeleton}
+                {setContent(process, View, char)}
             </div> 
         </>
     )    
 }
 
-const View = ({char}) => {
-    const {name, description, thumbnail, homepage, wiki, comics} = char;
+const View = ({data}) => {                                      //переименовали так как из setContent возвр уже data вместо char
+    const {name, description, thumbnail, homepage, wiki, comics} = data;
     const styleImgChar = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : null; 
 
     const renderList = () => {

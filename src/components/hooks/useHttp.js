@@ -2,12 +2,11 @@ import { useState, useCallback } from "react/cjs/react.development";
 
 
 export const useHttp = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [process, setProcess] = useState('waiting');
 
     const request = useCallback ( async (url, method = 'GET', body = null, headers = {'Content-type': 'application/json'} ) => {
         
-        setLoading(true);
+        setProcess('loading')                                            //процесс загрузки/ожидания
 
         try{
             const response = await fetch(url, {method, body, headers});
@@ -18,16 +17,17 @@ export const useHttp = () => {
 
             const data = await response.json();
 
-            setLoading(false);
+            // setProcess('confirmed') подтвержденный, но здесь удаляем это состояние так как асинхронная операция будут ошибки
             return data;            
         } catch(e){
-            setLoading(false);
-            setError('OOOPS');
+            setProcess('error')                                           //ошибка в процессе
             throw e;
         }                        
     }, []);
 
-    const clearError = useCallback(() => setError(null), []);  
+    const clearError = useCallback(() => {
+        setProcess('loading')
+    }, []);  
 
-    return {loading, error, request, clearError}
+    return {request, clearError, process, setProcess}
 };
