@@ -37,7 +37,7 @@ const CharInfo = (props) => {
     )    
 }
 
-const View = ({data}) => {                                      //переименовали так как из setContent возвр уже data вместо char
+export const View = ({data}) => {                                      //переименовали так как из setContent возвр уже data вместо char
     const {name, description, thumbnail, homepage, wiki, comics} = data;
     const styleImgChar = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : null; 
 
@@ -48,7 +48,6 @@ const View = ({data}) => {                                      //переиме
                 {comics.length > 0 ? null : 'There is no comics with this character'} 
 
                 {comics.map((item, i) => {
-                    if(i > 9) return;
                     
                     const idComicInfo = item.resourceURI.match(/\d{3,}/)[0]    //получаем id комикса из url адреса с сервера     
                     

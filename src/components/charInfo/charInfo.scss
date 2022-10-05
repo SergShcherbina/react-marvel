@@ -43,8 +43,23 @@
         line-height: 24px;
         margin-top: 10px;
         &-list {
+            overflow-y: scroll;
             position: relative;
             margin-top: 10px;
+            max-height: 320px;
+            &::-webkit-scrollbar {                              //стиль полосы прокрутки
+                width: 7px;
+            }
+            &::-webkit-scrollbar-track {
+                -webkit-box-shadow: 5px 5px 5px -5px #50222261 inset;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: 5px;
+                background-color: #ca0018da;
+                background-image: -webkit-gradient(linear, 0 0, 0 100%,
+                                        color-stop(.5, rgba(255, 255, 255, 0.384)),
+                                        color-stop(.5, transparent), to(transparent));
+            }
         }
         &-item {
             width: 100%;

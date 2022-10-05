@@ -68,7 +68,6 @@ const FormSearch = () => {
             }}
             validate = {validate}         
             onSubmit = {values => {
-                console.log(values);
                 return updateChar(values.search)}}                              //получаем результат из формы
             >
             <Form className="form">
