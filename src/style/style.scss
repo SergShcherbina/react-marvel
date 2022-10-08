@@ -64,7 +64,17 @@ main {
     margin-top: 50px;
     position: relative;
     overflow-anchor: none;
+    // animation: transformLeft 500ms
 }
+
+// @keyframes transformLeft {
+//     from{
+//         transform: translateX(-100%);
+//     }
+//     to{
+//         transform: translateX(0%);
+//     }
+// }
 
 .pulse {
     animation: pulse 1.5s ease-in-out .5s infinite
