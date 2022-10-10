@@ -59,10 +59,10 @@ const RandomChar = () => {
 }
 
 const View = ({data}) => {
-    const [blocShow, setBlocShow] = useState(false);
+    const [blockShow, setBlockShow] = useState(false);
 
     useEffect(()=> {
-        setBlocShow(true)
+        setBlockShow(true)
     }, [data])
 
     const {name, description, thumbnail, homepage, wiki} = data;
@@ -72,7 +72,7 @@ const View = ({data}) => {
     const styleImgChar = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : null;  
 
     return (
-        <CSSTransition classNames={'randomchar__block'} timeout={500} in={blocShow} unmountOnExit >
+        <CSSTransition classNames={'randomchar__block'} timeout={500} in={blockShow} unmountOnExit >
             <div className="randomchar__block">
                 <img src={thumbnail} alt="Random character" className="randomchar__img" style={styleImgChar} />
                 <div className="randomchar__info">

@@ -17,8 +17,8 @@ const CharInfo = (props) => {
 
     const updateChar = () => {
         if(!charId) return;                                        //если приходит null, то запрос не делаем
-        clearError();
 
+        clearError();
         getCharacter(charId)
             .then(res => {onCharLoded(res)})
             .then(() => setProcess('confirmed'))                   //устанавливаем состояние после того как приходит результат
@@ -49,7 +49,7 @@ export const View = ({data}) => {                                      //пер�
 
                 {comics.map((item, i) => {
                     
-                    const idComicInfo = item.resourceURI.match(/\d{3,}/)[0]    //получаем id комикса из url адреса с сервера     
+                    const idComicInfo = item.resourceURI.match(/\d{2,}/)[0]    //получаем id комикса из url адреса с сервера     
                     
                     return (
                         <Link to={`/comics/${idComicInfo}`} 
